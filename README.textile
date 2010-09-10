@@ -4,7 +4,7 @@ QUnit Mock provides some mock assertions and stubs for QUnit.
 
 h2. Installation
 
-Just download the "qunit.mock.js":http://www.github.com/bitzesty/qunit-mock/lib/qunit.mock.js and include it after @QUnit@.
+Just download the "qunit.mock.js":http://github.com/bitzesty/qunit-mock/raw/master/lib/qunit.mock.js and include it after @QUnit@.
 
 h2. Expecting calls
 
