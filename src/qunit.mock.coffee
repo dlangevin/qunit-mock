@@ -38,6 +38,17 @@ expectCall = (object, method, calls) ->
   
   mocking.expectations.push(expectation)
 
+stub = (object, method, fn) ->
+  stb = {
+    object: object,
+    method: method,
+    original: object[method]
+  }
+  
+  object[method] = fn
+  
+  mocking.stubs.push stb
+
 mock = (test) ->
   mk = {
     expectations: []
@@ -67,8 +78,12 @@ testExpectations = ->
   for expectation in mocking.expectations
     equals(expectation.callCount, expectation.expectedCalls, "method #{expectation.method} should be called #{expectation.expectedCalls} times")
     expectation.object[expectation.method] = expectation.originalMethod
+  
+  for stb in mocking.stubs
+    stb.object[stb.method] = stb.original
 
 window.expectCall = expectCall
+window.stub = stub
 window.mock = mock
 window.QUnitMock = {
   mocking: mocking,

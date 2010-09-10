@@ -25,6 +25,7 @@ Sample = function() {};
 Sample.prototype = {
 	method: function() {
 		this.otherMethod();
+		return "hello"
 	},
 	
 	callAsync: function() {
@@ -55,6 +56,15 @@ asyncTest("async mocking", function() {
 	setTimeout(function() {
 		start();
 	}, 500);
+});
+
+test("stubbing", function() {
+	stub(obj, 'method', function() {return "world"});
+	equal(obj.method(), "world");
+});
+
+test("stub returns original method", function() {
+	equal(obj.method(), "hello");
 });
 
 test("given error when wrong number of call count", function() {
