@@ -1,1 +1,59 @@
-h1. Qunit Mock
+h1. QUnit Mock
+
+QUnit Mock provides some mock assertions and stubs for QUnit.
+
+h2. Expecting calls
+
+See an example of expecting calls:
+
+bc.. MyClass = function() {}
+
+MyClass.prototype = {
+  methodOne: function() {
+    this.methodTwo();
+  },
+  
+  methodTwo: function() {},
+  
+  methodThree: function() {
+    this.methodTwo();
+    this.methodTwo();
+  }
+};
+
+test("calls second method on first", function() {
+  obj = new MyClass();
+  expectCall(obj, "methodTwo"); // expect the method call
+  obj.methodOne();
+});
+
+test("calls second method two times on third", function() {
+  obj = new MyClass();
+  expectCall(obj, "methodTwo", 2); // this time saying number of expect calls
+  obj.methodThree();
+});
+
+p. At end of test it will automatic check if the method is called and will test it.
+
+h3. Stubbing
+
+See an example of stubbing methods:
+
+bc.. MyClass = function() {}
+
+MyClass.prototype = {
+  someMethod: function() { return "hello"; }
+}
+
+obj = new MyClass();
+
+test("stubbing method", function() {
+  stub(obj, "someMethod", function() { return "world" });
+  equal(obj.someMethod(), "world"); // ok, will pass
+});
+
+test("method after stub method", function() {
+  equal(obj.someMethod(), "hello"); // ok too
+});
+
+p. Stubbing is easy, also, note in second test the method returned to original state, after the test finish all stubs will be removed and object will keep original ones.
