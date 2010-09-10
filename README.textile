@@ -2,6 +2,10 @@ h1. QUnit Mock
 
 QUnit Mock provides some mock assertions and stubs for QUnit.
 
+h2. Installation
+
+Just download the "qunit.mock.js":http://www.github.com/bitzesty/qunit-mock/lib/qunit.mock.js and include it after @QUnit@.
+
 h2. Expecting calls
 
 See an example of expecting calls:
@@ -35,7 +39,7 @@ test("calls second method two times on third", function() {
 
 p. At end of test it will automatic check if the method is called and will test it.
 
-h3. Stubbing
+h2. Stubbing
 
 See an example of stubbing methods:
 
