@@ -75,11 +75,13 @@ finishMock = () ->
   mocking = if stack.length > 0 then stack[stack.length - 1] else null
 
 testExpectations = ->
-  for expectation in mocking.expectations
+  while mocking.expectations.length > 0
+    expectation = mocking.expectations.pop()
     equals(expectation.callCount, expectation.expectedCalls, "method #{expectation.method} should be called #{expectation.expectedCalls} times")
     expectation.object[expectation.method] = expectation.originalMethod
   
-  for stb in mocking.stubs
+  while mocking.stubs.length > 0
+    stb = mocking.stubs.pop()
     stb.object[stb.method] = stb.original
 
 window.expectCall = expectCall
@@ -91,8 +93,6 @@ window.QUnitMock = {
 }
 
 window.test = (args...) ->
-  console.log args
-
   for arg, i in args
     args[i] = mocked(arg) if $.isFunction(arg)
   

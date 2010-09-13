@@ -63,6 +63,13 @@ test("stubbing", function() {
 	equal(obj.method(), "world");
 });
 
+test("stubbing same method multiple times", function() {
+	stub(obj, 'method', function() {return "one"})
+	stub(obj, 'method', function() {return "two"})
+	
+	equal(obj.method(), "two");
+});
+
 test("stub returns original method", function() {
 	equal(obj.method(), "hello");
 });
