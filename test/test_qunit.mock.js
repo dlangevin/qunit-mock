@@ -47,10 +47,11 @@ test("basic expecting assertions", function() {
 });
 
 test("return method back after test", function() {
-	same(obj.otherMethod, Sample.prototype.otherMethod, "method is same as old original one");
+	deepEqual(obj.otherMethod, Sample.prototype.otherMethod, "method is same as old original one");
 });
 
 asyncTest("async mocking", function() {
+	expect(1)
 	expectCall(obj, 'otherMethod');
 	obj.callAsync();
 	setTimeout(function() {
@@ -74,10 +75,25 @@ test("stub returns original method", function() {
 	equal(obj.method(), "hello");
 });
 
-test("given error when wrong number of call count", function() {
+test("[THIS TEST SHOULD FAIL!] given error when wrong number of call count", function() {
 	mock(function() {
 		obj = new Sample();
 		expectCall(obj, 'otherMethod', 2);
 		obj.method();
+
 	});
 });
+
+module("Expected args")
+
+test("should pass with expected invocations", function(){
+	expectCall(obj, "method").with("abc")
+	obj.method("abc")
+})
+
+test("[THIS TEST SHOULD FAIL!] should fail with unexpected invocations", function(){
+	expectCall(obj, "method").with("abc")
+	obj.method()
+})
+
+

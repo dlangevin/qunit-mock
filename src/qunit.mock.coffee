@@ -21,22 +21,36 @@
 mocking = null
 stack = []
 
+class Expectation
+  
+  constructor : (args)->
+    $.each(args, (i, el)=>
+      this[i] = el
+    )
+    @calledWith = []
+
+  with : (args...)->
+    @expectedArgs = args
+
+
 expectCall = (object, method, calls) ->
   calls ?= 1
   
-  expectation = {
+  expectation = new Expectation({
     object: object
     method: method
     expectedCalls: calls
     originalMethod: object[method]
     callCount: 0
-  }
+  })
   
   object[method] = (args...) ->
     expectation.originalMethod.apply(object, args)
     expectation.callCount += 1
+    expectation.calledWith.push(args)
   
   mocking.expectations.push(expectation)
+  expectation
 
 stub = (object, method, fn) ->
   stb = {
@@ -48,6 +62,7 @@ stub = (object, method, fn) ->
   object[method] = fn
   
   mocking.stubs.push stb
+  stb
 
 mock = (test) ->
   mk = {
@@ -77,7 +92,11 @@ finishMock = () ->
 testExpectations = ->
   while mocking.expectations.length > 0
     expectation = mocking.expectations.pop()
-    equals(expectation.callCount, expectation.expectedCalls, "method #{expectation.method} should be called #{expectation.expectedCalls} times")
+    equal(expectation.callCount, expectation.expectedCalls, "method #{expectation.method} should be called #{expectation.expectedCalls} times")
+    if expectation.expectedArgs
+      $.each(expectation.calledWith, (i, el)->
+        deepEqual(expectation.expectedArgs, el, "expected to be called with #{expectation.expectedArgs}, called with #{el}")
+      )
     expectation.object[expectation.method] = expectation.originalMethod
   
   while mocking.stubs.length > 0
